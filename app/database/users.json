@@ -1,0 +1,34 @@
+{
+    "jaime": {
+        "personal": {
+            "first-name": "Jaime",
+            "last-name": "Alba",
+            "gender": "M",
+            "email": "jaimitoalba@gmail.com",
+            "phone": "668119328"
+        },
+        "profile-img": "jaime-profile.jpg",
+        "status": "online",
+        "last-connection": "yesterday",
+        "chats": [
+            "id-chat-1",
+            "id-chat-2"
+        ]
+    },
+    "anais": {
+        "personal": {
+            "first-name": "Anais",
+            "last-name": "Watterson",
+            "gender": "F",
+            "email": "anais@gmail.com",
+            "phone": ""
+        },
+        "profile-img": "anais-profile.jpg",
+        "status": "offline",
+        "last-connection": "today",
+        "chats": [
+            "id-chat-1",
+            "id-chat-2"
+        ]
+    }
+}
