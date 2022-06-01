@@ -1,13 +1,20 @@
+
+const group_img = "../database/images/group.png";
+
+function on_failure(request) {
+    document.getElementById("msg-test").innerHTML = "Ajax failure: " + request.responseText;
+    document.getElementById("msg-test").style.color = "red";
+}
+
 function load_chats(user_id) {
 
-    const group_img = "../database/images/group.png";
-
-    function on_failure(request) {
-        document.getElementById("msg-test").innerHTML = "Ajax failure: " + request.responseText;
+    function open_chat() {
+        let prev_selec = document.querySelector("#plist li[class='clearfix active']");
+        if (prev_selec !== null) prev_selec.classList.remove("active");
+        this.classList.add("active");
     }
 
     display_chats = request => {
-
         let user = JSON.parse(request.responseText);
 
         user["chats"].forEach(chat_id => {
@@ -16,8 +23,9 @@ function load_chats(user_id) {
 
                 // <li class='clearfix' chat-id='$chat_id'>
                 let li = document.createElement("li");
-                li.className = "clearfix";
+                li.classList.add("clearfix");
                 li.setAttribute("chat-id", chat_id);
+                li.onclick = open_chat;
 
                 // <img src = '$img' alt = 'avatar'>
                 let img = document.createElement("img");
@@ -79,10 +87,9 @@ function load_chats(user_id) {
                 //      < img src = '$img' alt = 'avatar' >
                 //      <div class='about'>
                 //          <div class='name'>$name</div>
-                //          <div class='status'> <i class='fa fa-circle {$user["status"]}'></i> $status </div>
+                //          <div class='status'> <i class='fa fa-circle $user["status"]'></i> $status </div>
                 //      </div>
                 //  </li >
-
 
             }, on_failure)
 
@@ -94,12 +101,15 @@ function load_chats(user_id) {
     simpleAjax("get-data.php", "post", params, display_chats, on_failure);
 }
 
+function open_chat() {
+    console.log("here");
+    document.querySelector("#plist li[class='clearfix active']").classList.remove("active");
+    this.classList.add("active");
+}
 
-window.onload = () => {
+window.onload = function () {
     load_chats("jaime");
-    // document.querySelectorAll("#plist li[chat-id]").forEach(li => {
-    //     li.onclick = open_chat;
-    // });
+
 }
 
 

@@ -1,6 +1,4 @@
 <?php
-//include("user-data.inc.php");
-
 // TODO do signup
 session_start();
 $_SESSION["user"] = "jaime";
@@ -40,6 +38,13 @@ $_SESSION["user"] = "jaime";
 
                     <!-- People list-->
                     <div id="plist" class="people-list">
+
+                        <!-- user loged -->
+                        <div class="user-profile">
+                            <?php
+                            echo "<span id='user-id' value='{$_SESSION["user"]}'/>";
+                            ?>
+                        </div>
 
                         <!-- Search bar -->
                         <div class="input-group">
