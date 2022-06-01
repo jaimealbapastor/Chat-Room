@@ -1,5 +1,9 @@
 <?php
-include("user-data.inc.php");
+//include("user-data.inc.php");
+
+// TODO do signup
+session_start();
+$_SESSION["user"] = "jaime";
 ?>
 
 <!DOCTYPE html>
@@ -17,11 +21,19 @@ include("user-data.inc.php");
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
 
+    <script type="text/javascript" src="../js/simpleajax.js"></script>
+    <script type="text/javascript" src="../js/chat-room.js"></script>
+
 </head>
 
 <body>
 
     <div class="container">
+        <div id="login">
+            <?php echo "Loged as: {$_SESSION["user"]}"; ?>
+        </div>
+        <div id="msg-test">
+        </div>
         <div class="row clearfix">
             <div class="col-lg-12">
                 <div class="card chat-app">
@@ -37,25 +49,19 @@ include("user-data.inc.php");
                             <input type="text" class="form-control" placeholder="Search...">
                         </div>
 
-
-                        <ul class="list-unstyled chat-list mt-2 mb-0">
-                            <?php
-                            $file = "../database/users.json";
-                            $json = json_decode(file_get_contents($file), true);
-
-                            foreach ($json as $id => $user) {
-                                echo html_scroll_user($user);
-                            }
-
-                            ?>
-
+                        <!-- Users -->
+                        <ul class="list-unstyled chat-list mt-2 mb-0" id="side-chats">
+                            <!-- here is going to be the list of chats -->
                         </ul>
                     </div>
 
                     <!-- Chat -->
                     <div class="chat">
+
+                        <!-- Chat header -->
                         <div class="chat-header clearfix">
                             <div class="row">
+
                                 <div class="col-lg-6">
                                     <a href="javascript:void(0);" data-toggle="modal" data-target="#view_info">
                                         <img src="https://bootdey.com/img/Content/avatar/avatar2.png" alt="avatar">
@@ -65,6 +71,7 @@ include("user-data.inc.php");
                                         <small>Last seen: 2 hours ago</small>
                                     </div>
                                 </div>
+
                                 <div class="col-lg-6 hidden-sm text-right">
                                     <a href="javascript:void(0);" class="btn btn-outline-secondary"><i class="fa fa-camera"></i></a>
                                     <a href="javascript:void(0);" class="btn btn-outline-primary"><i class="fa fa-image"></i></a>
@@ -73,6 +80,8 @@ include("user-data.inc.php");
                                 </div>
                             </div>
                         </div>
+
+                        <!-- Chat history -->
                         <div class="chat-history">
                             <ul class="m-b-0">
                                 <li class="clearfix">
@@ -96,6 +105,8 @@ include("user-data.inc.php");
                                 </li>
                             </ul>
                         </div>
+
+                        <!-- Type message -->
                         <div class="chat-message clearfix">
                             <div class="input-group mb-0">
                                 <div class="input-group-prepend">

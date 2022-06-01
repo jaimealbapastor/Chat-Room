@@ -1,5 +1,6 @@
 {
     "jaime": {
+        "user-id": "jaime",
         "personal": {
             "first-name": "Jaime",
             "last-name": "Alba",
@@ -16,6 +17,7 @@
         ]
     },
     "anais": {
+        "user-id": "anais",
         "personal": {
             "first-name": "Anais",
             "last-name": "Watterson",
@@ -28,6 +30,22 @@
         "last-connection": "today",
         "chats": [
             "id-chat-1",
+            "id-chat-2"
+        ]
+    },
+    "darwin": {
+        "user-id": "darwin",
+        "personal": {
+            "first-name": "Darwin",
+            "last-name": "Watterson",
+            "gender": "M",
+            "email": "darwin@gmail.com",
+            "phone": ""
+        },
+        "profile-img": "darwin-profile.jpg",
+        "status": "online",
+        "last-connection": "yesterday",
+        "chats": [
             "id-chat-2"
         ]
     }
