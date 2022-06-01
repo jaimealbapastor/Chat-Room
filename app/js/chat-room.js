@@ -9,9 +9,17 @@ function on_failure(request) {
 function load_chats(user_id) {
 
     function open_chat() {
+        // Darken active chat
         let prev_selec = document.querySelector("#plist li[class='clearfix active']");
         if (prev_selec !== null) prev_selec.classList.remove("active");
         this.classList.add("active");
+
+        // Display user profile on top
+        document.querySelector("#top-info-chat img").src = this.querySelector("img").src;
+        document.querySelector("#top-info-chat h6").innerHTML = this.querySelector(".name").innerHTML;
+        document.querySelector("#top-info-chat small").innerHTML = this.querySelector(".status").innerHTML;
+
+
     }
 
     display_chats = request => {
@@ -84,7 +92,7 @@ function load_chats(user_id) {
                 //TODO change chat-id <- not secure
 
                 //  <li class='clearfix' chat-id='$chat_id'> 
-                //      < img src = '$img' alt = 'avatar' >
+                //      <img src = '$img' alt = 'avatar'>
                 //      <div class='about'>
                 //          <div class='name'>$name</div>
                 //          <div class='status'> <i class='fa fa-circle $user["status"]'></i> $status </div>
@@ -101,11 +109,6 @@ function load_chats(user_id) {
     simpleAjax("get-data.php", "post", params, display_chats, on_failure);
 }
 
-function open_chat() {
-    console.log("here");
-    document.querySelector("#plist li[class='clearfix active']").classList.remove("active");
-    this.classList.add("active");
-}
 
 window.onload = function () {
     load_chats("jaime");

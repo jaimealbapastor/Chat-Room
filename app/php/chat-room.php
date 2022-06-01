@@ -67,13 +67,18 @@ $_SESSION["user"] = "jaime";
                         <div class="chat-header clearfix">
                             <div class="row">
 
-                                <div class="col-lg-6">
+                                <div class="col-lg-6" id="top-info-chat">
                                     <a href="javascript:void(0);" data-toggle="modal" data-target="#view_info">
+                                        <!-- TODO Cambiar perfil de base -->
+                                        <!-- de -->
                                         <img src="https://bootdey.com/img/Content/avatar/avatar2.png" alt="avatar">
+                                        <!-- a -->
                                     </a>
                                     <div class="chat-about">
+                                        <!-- de -->
                                         <h6 class="m-b-0">Aiden Chavez</h6>
                                         <small>Last seen: 2 hours ago</small>
+                                        <!-- a -->
                                     </div>
                                 </div>
 
