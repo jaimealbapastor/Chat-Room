@@ -16,5 +16,12 @@
             "anais",
             "darwin"
         ]
+    },
+    "id-chat-3": {
+        "is_group": false,
+        "members": [
+            "jaime",
+            "darwin"
+        ]
     }
 }

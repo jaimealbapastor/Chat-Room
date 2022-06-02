@@ -13,7 +13,8 @@
         "last-connection": "yesterday",
         "chats": [
             "id-chat-1",
-            "id-chat-2"
+            "id-chat-2",
+            "id-chat-3"
         ]
     },
     "anais": {
@@ -46,7 +47,8 @@
         "status": "online",
         "last-connection": "yesterday",
         "chats": [
-            "id-chat-2"
+            "id-chat-2",
+            "id-chat-3"
         ]
     }
 }

@@ -70,18 +70,14 @@ $_SESSION["user"] = "jaime";
                                 <div class="col-lg-6" id="top-info-chat">
                                     <a href="javascript:void(0);" data-toggle="modal" data-target="#view_info">
                                         <!-- TODO Cambiar perfil de base -->
-                                        <!-- de -->
                                         <img src="https://bootdey.com/img/Content/avatar/avatar2.png" alt="avatar">
-                                        <!-- a -->
                                     </a>
                                     <div class="chat-about">
-                                        <!-- de -->
                                         <h6 class="m-b-0">Aiden Chavez</h6>
                                         <small>Last seen: 2 hours ago</small>
-                                        <!-- a -->
                                     </div>
                                 </div>
-
+                                <!-- iconos -->
                                 <div class="col-lg-6 hidden-sm text-right">
                                     <a href="javascript:void(0);" class="btn btn-outline-secondary"><i class="fa fa-camera"></i></a>
                                     <a href="javascript:void(0);" class="btn btn-outline-primary"><i class="fa fa-image"></i></a>
@@ -94,6 +90,7 @@ $_SESSION["user"] = "jaime";
                         <!-- Chat history -->
                         <div class="chat-history">
                             <ul class="m-b-0">
+                                <!-- de -->
                                 <li class="clearfix">
                                     <div class="message-data text-right">
                                         <span class="message-data-time">10:10 AM, Today</span>
@@ -113,6 +110,7 @@ $_SESSION["user"] = "jaime";
                                     </div>
                                     <div class="message my-message">Project has been already finished and I have results to show you.</div>
                                 </li>
+                                <!-- a -->
                             </ul>
                         </div>
 

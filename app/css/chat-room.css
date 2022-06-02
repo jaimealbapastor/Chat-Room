@@ -101,7 +101,7 @@ body {
 
 .chat .chat-history ul li {
     list-style: none;
-    margin-bottom: 30px
+    margin-bottom: 5px
 }
 
 .chat .chat-history ul li:last-child {
@@ -109,7 +109,7 @@ body {
 }
 
 .chat .chat-history .message-data {
-    margin-bottom: 15px
+    margin-bottom: 8px
 }
 
 .chat .chat-history .message-data img {
@@ -124,7 +124,7 @@ body {
 
 .chat .chat-history .message {
     color: #444;
-    padding: 18px 20px;
+    padding: 7px 15px;
     line-height: 26px;
     font-size: 16px;
     border-radius: 7px;
