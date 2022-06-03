@@ -24,4 +24,6 @@ if ($_POST["function"] == "m" && post_exist(["chat-id", "user-id", "msg"])) {
     $today = date("Y-m-d") . "T" . date("H:i:s");
     $content = "{$_POST["user-id"]};$today;{$_POST["msg"]}\n";
     file_put_contents($file, $content, FILE_APPEND);
+} elseif ($_POST["function"] == "m" && post_exist(["chat-id", "user-id", "msg"])) {
+    //TODO seguir
 }

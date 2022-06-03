@@ -1,4 +1,4 @@
-const img_folder = "../database/images/"
+const img_folder = "database/images/"
 const group_img = img_folder + "group.png";
 
 function void_f() { }
@@ -83,7 +83,7 @@ function load_chatroom(user_id) {
         // Display old messages
         let chat = document.querySelector("section.chat .messages-chat");
         chat.innerHTML = "";
-        simpleAjax("get-data.php", "post", `function=m&chat-id=${discussion.getAttribute("chat-id")}`, request => {
+        simpleAjax("php/get-data.php", "post", `function=m&chat-id=${discussion.getAttribute("chat-id")}`, request => {
             if (request.responseText) {
                 let messages = JSON.parse(request.responseText);
                 let last_id = client_id;
@@ -119,14 +119,13 @@ function load_chatroom(user_id) {
 
         // display existing chats on the left side
         user["chats"].forEach(chat_id => {
-            simpleAjax("get-data.php", "post", `function=c&chat-id=${chat_id}`, request => {
+            simpleAjax("php/get-data.php", "post", `function=c&chat-id=${chat_id}`, request => {
                 let chat = JSON.parse(request.responseText);
 
                 // <div class="discussion message-active">
                 let discussion = document.createElement("div");
                 discussion.classList.add("discussion");
                 discussion.setAttribute("chat-id", chat_id);
-                // TODO SIGUIENTE AQUI
                 discussion.onclick = () => { open_chat(discussion, user["user-id"], user["profile-img"]) };
 
                 // <div class="photo" style="background-image: url();">
@@ -162,7 +161,7 @@ function load_chatroom(user_id) {
                     if (chat["members"][0] != user_id) param = `function=i&user-id=${chat["members"][0]}`;
                     else param = `function=i&user-id=${chat["members"][1]}`;
 
-                    simpleAjax("get-data.php", "post", param, request => {
+                    simpleAjax("php/get-data.php", "post", param, request => {
                         let contact = JSON.parse(request.responseText);
 
                         name.innerHTML = contact["personal"]["first-name"] + " " + contact["personal"]["last-name"];
@@ -178,7 +177,7 @@ function load_chatroom(user_id) {
                 }
 
                 let param = "function=l&chat-id=" + chat_id;
-                simpleAjax("get-data.php", "post", param, request => {
+                simpleAjax("php/get-data.php", "post", param, request => {
                     [id, time, text] = request.responseText.split(";");
 
                     if (text !== undefined) message.innerHTML = text;
@@ -216,7 +215,7 @@ function load_chatroom(user_id) {
 
     // get info about the user loged
     let params = `function=i&user-id=${user_id}`;
-    simpleAjax("get-data.php", "post", params, display_chats, on_failure);
+    simpleAjax("php/get-data.php", "post", params, display_chats, on_failure);
 }
 
 function set_onclick_buttons() {
@@ -233,7 +232,7 @@ function set_onclick_buttons() {
         let user_id = document.getElementById("user-id").getAttribute("value");
 
         let params = `function=m&chat-id=${chat_id}&user-id=${user_id}&msg=${text}`;
-        simpleAjax("put-data.php", "post", params, void_f, on_failure);
+        simpleAjax("php/put-data.php", "post", params, void_f, on_failure);
 
         // display message
         let container = document.querySelector("section.chat .messages-chat");
@@ -255,6 +254,7 @@ function set_onclick_buttons() {
             send_message();
         }
     })
+
 }
 
 
