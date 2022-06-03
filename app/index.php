@@ -15,13 +15,15 @@ $_SESSION["user"] = "jaime";
   <link rel="stylesheet" href="css/index.css">
 
   <script type="text/javascript" src="js/simpleajax.js"></script>
-  <script type="text/javascript" src="js/chat-room.js"></script>
+  <script type="text/javascript" src="js/display.js"></script>
+  <script type="text/javascript" src="js/chat-tab.js"></script>
 
 </head>
 
 <body>
 
   <body>
+
     <!-- user_id -->
     <div>
       <?php
@@ -41,21 +43,21 @@ $_SESSION["user"] = "jaime";
         <!-- Navigation Menu -->
         <nav class="menu">
           <ul class="items">
-            <li class="item">
+            <!-- <li class="item">
               <i class="fa fa-home" aria-hidden="true"></i>
-            </li>
-            <li class="item">
+            </li> -->
+            <li class="item user-tab">
               <i class="fa fa-user" aria-hidden="true"></i>
             </li>
-            <li class="item">
-              <i class="fa fa-pencil" aria-hidden="true"></i>
-            </li>
-            <li class="item item-active">
+            <li class="item chat-tab item-active">
               <i class="fa fa-commenting" aria-hidden="true"></i>
             </li>
-            <li class="item">
-              <i class="fa fa-file" aria-hidden="true"></i>
+            <li class="item create-tab">
+              <i class="fa fa-pencil" aria-hidden="true"></i>
             </li>
+            <!-- <li class="item">
+              <i class="fa fa-file" aria-hidden="true"></i>
+            </li> -->
             <li class="item">
               <i class="fa fa-cog" aria-hidden="true"></i>
             </li>
@@ -81,7 +83,7 @@ $_SESSION["user"] = "jaime";
           <!-- Contact Info -->
           <div class="header-chat">
             <i class="icon fa fa-user-o" aria-hidden="true"></i>
-            <p class="name">Megan Leib</p>
+            <p class="name"></p>
             <i class="icon clickable fa fa-ellipsis-h right" aria-hidden="true"></i>
           </div>
 

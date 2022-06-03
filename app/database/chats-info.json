@@ -1,13 +1,13 @@
 {
     "id-chat-1": {
-        "is_group": false,
+        "is_channel": false,
         "members": [
             "jaime",
             "anais"
         ]
     },
     "id-chat-2": {
-        "is_group": true,
+        "is_channel": true,
         "name": "PEIP2",
         "img": "",
         "members": [
@@ -17,7 +17,7 @@
         ]
     },
     "id-chat-3": {
-        "is_group": false,
+        "is_channel": false,
         "members": [
             "jaime",
             "darwin"
