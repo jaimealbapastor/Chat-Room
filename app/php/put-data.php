@@ -20,7 +20,7 @@ if (!isset($_POST["function"])) exit();
 if ($_POST["function"] == "m" && post_exist(["chat-id", "user-id", "msg"])) {
     // -> add a message to a chat
 
-    $file = "../database/chats/messages/{$_POST["chat-id"]}.csv";
+    $file = "../database/discussions/{$_POST["chat-id"]}.csv";
     $today = date("Y-m-d") . "T" . date("H:i:s");
     $content = "{$_POST["user-id"]};$today;{$_POST["msg"]}\n";
     file_put_contents($file, $content, FILE_APPEND);

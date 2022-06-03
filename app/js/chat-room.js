@@ -11,6 +11,15 @@ function test(txt) {
     document.getElementById("msg-test").innerHTML = "Testing: " + txt;
     document.getElementById("msg-test").style.visibility = "visible";
 }
+function toHHMM(date) {
+    function checkTime(i) {
+        if (i < 10) {
+            i = "0" + i;
+        }
+        return i;
+    }
+    return checkTime(date.getHours()) + ":" + checkTime(date.getMinutes());
+}
 
 function display_msg(msg, time, container, is_response, is_first_msg) {
     // delete time tag
@@ -50,11 +59,13 @@ function display_msg(msg, time, container, is_response, is_first_msg) {
 
     container.appendChild(message);
 
-    // <p class="time"> 14h58</p>
+    // time
     let time_tag = document.createElement("p");
     time_tag.classList.add("time");
     if (is_response) time_tag.classList.add("response-time");
-    time_tag.innerHTML = time;
+    let date = new Date();
+    date.setTime(Date.parse(time))
+    time_tag.innerHTML = toHHMM(date);
     container.appendChild(time_tag);
 }
 
@@ -87,6 +98,17 @@ function load_chatroom(user_id) {
 
         }, on_failure)
 
+    }
+
+    function diff_time(dt1, dt2) {
+        let diff = (dt2 - dt1) / 1000; //sec
+        if (diff < 60) return Math.round(diff) + " sec";
+        if (diff < 3600) return Math.round(diff / 60) + " min";
+        if (diff < 3600 * 24) return Math.round(diff / 3600) + " h";
+        if (diff < 3600 * 24 * 7) return Math.round(diff / (3600 * 24)) + " days";
+        if (diff < 3600 * 24 * 30) return Math.round(diff / (3600 * 24 * 7)) + " weeks";
+        if (diff < 3600 * 24 * 365) return Math.round(diff / (3600 * 24 * 30)) + " months";
+        return Math.round(diff / (3600 * 24 * 365)) + " years";
     }
 
     display_chats = request => {
@@ -129,11 +151,10 @@ function load_chatroom(user_id) {
 
                 if (chat["is_group"]) {
                     // TODO hacer esto
-                    // name.innerHTML = chat["name"];
-                    // if (chat["img"] == "") img.src = group_img;
+                    name.innerHTML = chat["name"];
 
-                    // else img.src = chat["img"];
-                    // status.innerHTML = chat["description"];
+                    if (chat["img"] == "") photo.style.backgroundImage = "url(" + group_img + ")";
+                    else photo.style.backgroundImage = "url(" + chat["img"] + ")";
 
                 } else {
                     // select the other user's profile photo
@@ -154,17 +175,18 @@ function load_chatroom(user_id) {
                             photo.appendChild(online);
                         }
                     }, on_failure);
-
-                    param = "function=l&chat-id=" + chat_id;
-                    simpleAjax("get-data.php", "post", param, request => {
-                        [id, time, text] = request.responseText.split(";");
-                        message.innerHTML = text;
-                        time = Date.now() - Date.parse(time);
-                        timer.innerHTML = Math.floor(timer / 1000); // in seconds
-                    }, on_failure)
-
-
                 }
+
+                let param = "function=l&chat-id=" + chat_id;
+                simpleAjax("get-data.php", "post", param, request => {
+                    [id, time, text] = request.responseText.split(";");
+
+                    if (text !== undefined) message.innerHTML = text;
+                    timer.innerHTML = "0 sec";
+                    if (time !== undefined) {
+                        timer.innerHTML = diff_time(Date.parse(time), Date.now())
+                    }
+                }, on_failure)
 
                 // fit together the elements 
                 discussion.appendChild(photo);
@@ -198,24 +220,41 @@ function load_chatroom(user_id) {
 }
 
 function set_onclick_buttons() {
+    function send_message() {
+        let text = document.querySelector(".write-message").value;
 
-    // send message button
-    document.querySelector(".footer-chat i.icon").onclick = function () {
-        let text = document.querySelector(".footer-chat input.write-message").value;
         if (!text) return; // check if there is text
 
-        let chat_selected = document.querySelector("row .discussions div[class='discussion message-active']");
+        let chat_selected = document.querySelector(".discussions div[class='discussion message-active']");
         if (chat_selected == null) return; // check if a chat is selected
 
+        // save in database
         let chat_id = chat_selected.getAttribute("chat-id");
         let user_id = document.getElementById("user-id").getAttribute("value");
 
         let params = `function=m&chat-id=${chat_id}&user-id=${user_id}&msg=${text}`;
         simpleAjax("put-data.php", "post", params, void_f, on_failure);
 
-        let container = document.querySelector(".chat-history ul.m-b-0");
-        // display_msg()
+        // display message
+        let container = document.querySelector("section.chat .messages-chat");
+        let date = new Date;
+        date.setTime(Date.now());
+        date = toHHMM(date);
+        display_msg(text, date, container, true, false);
+
+        // clear typed message
+        document.querySelector(".write-message").value = "";
+
+        // change last message
+        chat_selected.querySelector(".message").innerHTML = text;
     }
+    // send message button
+    document.querySelector(".send").onclick = send_message;
+    document.querySelector(".write-message").addEventListener("keyup", e => {
+        if (e.key == "Enter") {
+            send_message();
+        }
+    })
 }
 
 
