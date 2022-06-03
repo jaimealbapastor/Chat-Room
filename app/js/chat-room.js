@@ -1,6 +1,8 @@
 const img_folder = "../database/images/"
 const group_img = img_folder + "group.png";
 
+function void_f() { }
+
 function on_failure(request) {
     document.getElementById("msg-test").innerHTML = "Ajax failure: " + request.responseText;
     document.getElementById("msg-test").style.visibility = "visible";
@@ -10,64 +12,76 @@ function test(txt) {
     document.getElementById("msg-test").style.visibility = "visible";
 }
 
+function display_msg(msg, time, container, is_response, is_first_msg) {
+    // delete time tag
+    if (!is_first_msg) {
+        if (container.lastChild !== null && container.lastChild.classList.contains("time")) {
+            container.lastChild.remove();
+        }
+    }
+
+    // create html for message
+
+    // <div class="message">
+    let message = document.createElement("div");
+    message.classList.add("message");
+    if (is_response || !is_first_msg) message.classList.add("text-only");
+
+    //<div class="photo" style="background-image: url();">
+    if (!is_response) {
+        let photo = document.querySelector("section.discussions .message-active .photo").cloneNode(true);
+        message.appendChild(photo);
+    }
+
+    // <p class="text">
+    let text = document.createElement("p");
+    text.className = "text";
+    text.innerHTML = msg;
+
+    // <div class="response">
+    if (is_response) {
+        let response = document.createElement("div");
+        response.className = "response";
+        response.appendChild(text);
+        message.appendChild(response);
+    } else {
+        message.appendChild(text);
+    }
+
+    container.appendChild(message);
+
+    // <p class="time"> 14h58</p>
+    let time_tag = document.createElement("p");
+    time_tag.classList.add("time");
+    if (is_response) time_tag.classList.add("response-time");
+    time_tag.innerHTML = time;
+    container.appendChild(time_tag);
+}
+
 function load_chatroom(user_id) {
 
-    open_chat = (side_chat, user) => {
-        // Darken active chat
-        let prev_selec = document.querySelector("#plist li[class='clearfix active']");
-        if (prev_selec !== null) prev_selec.classList.remove("active");
-        side_chat.classList.add("active");
+    open_chat = (discussion, client_id) => {
+        // Select active chat
+        let prev_selec = document.querySelector(".discussions div.message-active");
+        if (prev_selec !== null) prev_selec.classList.remove("message-active");
+        discussion.classList.add("message-active");
 
         // Display user profile on top
-        document.querySelector("#top-info-chat img").src = side_chat.querySelector("img").src;
-        document.querySelector("#top-info-chat h6").innerHTML = side_chat.querySelector(".name").innerHTML;
-        document.querySelector("#top-info-chat small").innerHTML = side_chat.querySelector(".status").innerHTML;
+        document.querySelector("section.chat .header-chat p.name").innerHTML = discussion.querySelector(".name").innerHTML;
 
         // Display old messages
-        let ul = document.querySelector(".chat-history ul.m-b-0");
-        ul.innerHTML = "";
-        simpleAjax("get-data.php", "post", `function=m&chat-id=${side_chat.getAttribute("chat-id")}`, request => {
+        let chat = document.querySelector("section.chat .messages-chat");
+        chat.innerHTML = "";
+        simpleAjax("get-data.php", "post", `function=m&chat-id=${discussion.getAttribute("chat-id")}`, request => {
             if (request.responseText) {
                 let messages = JSON.parse(request.responseText);
+                let last_id = client_id;
 
-                messages.forEach(msg => {
-                    [id, time, msg] = msg.split(";");
-                    // create html for message
-                    let is_my_msg = (id == user_id);
-
-                    // <li class="clearfix">
-                    let li = document.createElement("li");
-                    li.classList.add("clearfix");
-
-                    // <div class="message-data text-right">
-                    let msg_data = document.createElement("div");
-                    msg_data.classList.add("message-data"); // ICI IMPORTANT -------
-                    if (is_my_msg) msg_data.classList.add("text-right");
-
-                    // <span class="message-data-time">10:10 AM, Today</span>
-                    let data_time = document.createElement("span");
-                    data_time.className = "message-data-time";
-                    data_time.innerHTML = time; // TODO formatear hora
-                    msg_data.appendChild(data_time);
-
-                    // <img src="..." alt="avatar"></img>
-                    if (is_my_msg) {
-                        let img = document.createElement("img");
-                        img.src = img_folder + user["profile-img"];
-                        img.alt = "avatar";
-                        msg_data.appendChild(img);
-                    }
-                    // <div class="message other-message float-right"></div>
-                    let msg_tag = document.createElement("div");
-                    if (is_my_msg) msg_tag.className = "message other-message float-right";
-                    else msg_tag.className = "message my-message";
-                    msg_tag.innerHTML = msg;
-
-                    // fit together the elements
-                    li.appendChild(msg_data);
-                    li.appendChild(msg_tag);
-                    ul.appendChild(li);
-                })
+                for (let i = 0; i < messages.length; ++i) { // TODO verificar foreach
+                    [id, time, msg] = messages[i].split(";");
+                    display_msg(msg, time, chat, (id == client_id), (id != last_id));
+                    last_id = id;
+                }
             }
 
 
@@ -76,84 +90,102 @@ function load_chatroom(user_id) {
     }
 
     display_chats = request => {
-        let user = JSON.parse(request.responseText);
+        let user = JSON.parse(request.responseText);    // TODO change let -> const
 
-        let user_hidden_info = document.getElementById("user-id");
-        user_hidden_info.setAttribute("profile-img", user["profile-img"]);
+        let user_hidden_tag = document.getElementById("user-id");
+        user_hidden_tag.setAttribute("profile-img", user["profile-img"]);
 
         // display existing chats on the left side
         user["chats"].forEach(chat_id => {
             simpleAjax("get-data.php", "post", `function=c&chat-id=${chat_id}`, request => {
                 let chat = JSON.parse(request.responseText);
 
-                // <li class='clearfix' chat-id='$chat_id'>
-                let li = document.createElement("li");
-                li.classList.add("clearfix");
-                li.setAttribute("chat-id", chat_id);
-                li.onclick = () => { open_chat(li, user) };
+                // <div class="discussion message-active">
+                let discussion = document.createElement("div");
+                discussion.classList.add("discussion");
+                discussion.setAttribute("chat-id", chat_id);
+                // TODO SIGUIENTE AQUI
+                discussion.onclick = () => { open_chat(discussion, user["user-id"], user["profile-img"]) };
 
-                // <img src = '$img' alt = 'avatar'>
-                let img = document.createElement("img");
-                img.alt = "avatar";
+                // <div class="photo" style="background-image: url();">
+                let photo = document.createElement("div");
+                photo.className = "photo";
 
-                // <div class='about'>
-                let about = document.createElement("div");
-                about.className = "about";
+                // <div class="desc-contact"></div>
+                let desc_contact = document.createElement("div");
+                desc_contact.className = "desc-contact";
 
-                // <div class='name'>$UserName</div>
-                let name = document.createElement("div");
+                // <p class="name">Dave Corlew</p>
+                let name = document.createElement("p");
                 name.className = "name";
 
-                // <div class='status'>$status</div>
-                let status = document.createElement("div");
-                status.className = "status";
+                // <p class="message">Hello, how are you ?</p>
+                let message = document.createElement("p");
+                message.className = "message";
+
+                // <div class="timer">42 min</div>
+                let timer = document.createElement("div");
+                timer.className = "timer";
 
                 if (chat["is_group"]) {
-                    name.innerHTML = chat["name"];
-                    if (chat["img"] == "") img.src = group_img;
+                    // TODO hacer esto
+                    // name.innerHTML = chat["name"];
+                    // if (chat["img"] == "") img.src = group_img;
 
-                    else img.src = chat["img"];
-                    status.innerHTML = chat["description"];
+                    // else img.src = chat["img"];
+                    // status.innerHTML = chat["description"];
 
                 } else {
-                    // <i class='fa fa-circle {$user["status"]}'></i>
-                    let i = document.createElement("i");
-                    i.className = "fa fa-circle";
-                    status.appendChild(i);
-
-                    // select the other user's profile pic
+                    // select the other user's profile photo
                     let param;
                     if (chat["members"][0] != user_id) param = `function=i&user-id=${chat["members"][0]}`;
                     else param = `function=i&user-id=${chat["members"][1]}`;
 
                     simpleAjax("get-data.php", "post", param, request => {
-                        let other_user = JSON.parse(request.responseText);
+                        let contact = JSON.parse(request.responseText);
 
-                        name.innerHTML = other_user["personal"]["first-name"] + " " + other_user["personal"]["last-name"];
-                        img.src = img_folder + other_user["profile-img"];
-                        i.classList.add(other_user["status"]);
+                        name.innerHTML = contact["personal"]["first-name"] + " " + contact["personal"]["last-name"];
+                        photo.style.backgroundImage = "url(" + img_folder + contact["profile-img"] + ")";
 
-                        if (other_user["status"] == "online") status.innerHTML += "online";
-                        else status.innerHTML += " left " + other_user["last-connection"];// TODO change into: left x minutes ago
+                        if (contact["online"]) {
+                            // <div class="online"></div>
+                            let online = document.createElement("div");
+                            online.className = "online";
+                            photo.appendChild(online);
+                        }
+                    }, on_failure);
+
+                    param = "function=l&chat-id=" + chat_id;
+                    simpleAjax("get-data.php", "post", param, request => {
+                        [id, time, text] = request.responseText.split(";");
+                        message.innerHTML = text;
+                        time = Date.now() - Date.parse(time);
+                        timer.innerHTML = Math.floor(timer / 1000); // in seconds
                     }, on_failure)
+
+
                 }
 
                 // fit together the elements 
-                about.appendChild(name);
-                about.appendChild(status);
-                li.appendChild(img);
-                li.appendChild(about);
-                document.getElementById("side-chats").appendChild(li);
+                discussion.appendChild(photo);
+                desc_contact.appendChild(name);
+                desc_contact.appendChild(message);
+                discussion.appendChild(desc_contact);
+                discussion.appendChild(timer);
+                document.querySelector("section.discussions").appendChild(discussion);
 
                 //TODO change chat-id <- not secure
 
-                //  <li class='clearfix' chat-id='$chat_id'> 
-                //      <img src = '$img' alt = 'avatar'>
-                //      <div class='about'>
-                //          <div class='name'>$name</div>
-                //          <div class='status'> <i class='fa fa-circle $user["status"]'></i> $status </div>
+                //  <div class="discussion message-active">
+                //      <div class="photo" style="background-image: url(../database/images/jaime-profile.jpg);">
+                //          <div class="online"></div>
                 //      </div>
-                //  </li >
+                //      <div class="desc-contact">
+                //          <p class="name">Megan Leib</p>
+                //          <p class="message">9 pm at the bar if possible</p>
+                //      </div>
+                //      <div class="timer">12 sec</div>
+                //   </div>
 
             }, on_failure)
 
@@ -165,12 +197,34 @@ function load_chatroom(user_id) {
     simpleAjax("get-data.php", "post", params, display_chats, on_failure);
 }
 
+function set_onclick_buttons() {
+
+    // send message button
+    document.querySelector(".footer-chat i.icon").onclick = function () {
+        let text = document.querySelector(".footer-chat input.write-message").value;
+        if (!text) return; // check if there is text
+
+        let chat_selected = document.querySelector("row .discussions div[class='discussion message-active']");
+        if (chat_selected == null) return; // check if a chat is selected
+
+        let chat_id = chat_selected.getAttribute("chat-id");
+        let user_id = document.getElementById("user-id").getAttribute("value");
+
+        let params = `function=m&chat-id=${chat_id}&user-id=${user_id}&msg=${text}`;
+        simpleAjax("put-data.php", "post", params, void_f, on_failure);
+
+        let container = document.querySelector(".chat-history ul.m-b-0");
+        // display_msg()
+    }
+}
+
 
 window.onload = function () {
     document.getElementById("msg-test").style.color = "red";
     document.getElementById("msg-test").onclick = function () { this.style.visibility = "collapse"; }
 
     load_chatroom("jaime");
+    set_onclick_buttons();
 }
 
 

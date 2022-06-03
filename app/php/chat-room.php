@@ -27,7 +27,7 @@ $_SESSION["user"] = "jaime";
 <body>
 
     <div class="container">
-        <div id="login">
+        <div>
             <?php echo "Loged as: {$_SESSION["user"]}"; ?>
         </div>
         <div id="msg-test">
@@ -116,7 +116,7 @@ $_SESSION["user"] = "jaime";
 
                         <!-- Type message -->
                         <div class="chat-message clearfix">
-                            <div class="input-group mb-0">
+                            <div id="send-msg" class="input-group mb-0">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text"><i class="fa fa-send"></i></span>
                                 </div>

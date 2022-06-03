@@ -1,3 +1,3 @@
 <?php
-header("Location: php/chat-room.php");
+header("Location: php/new-ChatRoom.php");
 exit();

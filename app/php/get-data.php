@@ -4,6 +4,7 @@
 // i -> get user info
 // m -> get chat messages from a chat
 // c -> get information of a chat
+// l -> get last message and time
 
 if (!isset($_POST["function"])) exit();
 
@@ -33,6 +34,11 @@ if ($_POST["function"] == "i" && isset($_POST["user-id"])) {
     if (isset($json[$_POST["chat-id"]])) {
         echo json_encode($json[$_POST["chat-id"]]);
     }
+} elseif ($_POST["function"] == "l" && isset($_POST["chat-id"])) {
+    // l -> get last message and time
+    $file = "../database/chats/messages/{$_POST["chat-id"]}.csv";
+    $array = file($file, FILE_IGNORE_NEW_LINES);
+    echo end($array);
 }
 
 

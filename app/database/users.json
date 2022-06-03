@@ -9,7 +9,7 @@
             "phone": "668119328"
         },
         "profile-img": "jaime-profile.jpg",
-        "status": "online",
+        "online": true,
         "last-connection": "yesterday",
         "chats": [
             "id-chat-1",
@@ -27,7 +27,7 @@
             "phone": ""
         },
         "profile-img": "anais-profile.jpg",
-        "status": "offline",
+        "online": false,
         "last-connection": "today",
         "chats": [
             "id-chat-1",
@@ -44,7 +44,7 @@
             "phone": ""
         },
         "profile-img": "darwin-profile.jpg",
-        "status": "online",
+        "online": true,
         "last-connection": "yesterday",
         "chats": [
             "id-chat-2",
