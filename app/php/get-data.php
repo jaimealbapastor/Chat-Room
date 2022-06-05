@@ -1,14 +1,14 @@
 <?php
 // this file is called by simpleAjax and has multiple purposes
-// determined by the 'function' parameter:
+// determined by the 'f' (function) parameter:
 // i -> get user info
 // m -> get chat messages from a chat
 // c -> get information of a chat
 // l -> get last message and time
 
-if (!isset($_POST["function"])) exit();
+if (!isset($_POST["f"])) exit();
 
-if ($_POST["function"] == "i" && isset($_POST["user-id"])) {
+if ($_POST["f"] == "i" && isset($_POST["user-id"])) {
     // -> get user info
 
     $file = "../database/users.json";
@@ -16,7 +16,7 @@ if ($_POST["function"] == "i" && isset($_POST["user-id"])) {
     if (isset($json[$_POST["user-id"]])) {
         echo json_encode($json[$_POST["user-id"]]);
     }
-} elseif ($_POST["function"] == "m" && isset($_POST["chat-id"])) {
+} elseif ($_POST["f"] == "m" && isset($_POST["chat-id"])) {
     // -> get chat mesages
 
     $file = "../database/discussions/{$_POST["chat-id"]}.csv";
@@ -26,7 +26,7 @@ if ($_POST["function"] == "i" && isset($_POST["user-id"])) {
     } else {
         // TODO create file if not exists
     }
-} elseif ($_POST["function"] == "c" && isset($_POST["chat-id"])) {
+} elseif ($_POST["f"] == "c" && isset($_POST["chat-id"])) {
     // -> get information of a chat
 
     $file = "../database/chats-info.json";
@@ -34,7 +34,7 @@ if ($_POST["function"] == "i" && isset($_POST["user-id"])) {
     if (isset($json[$_POST["chat-id"]])) {
         echo json_encode($json[$_POST["chat-id"]]);
     }
-} elseif ($_POST["function"] == "l" && isset($_POST["chat-id"])) {
+} elseif ($_POST["f"] == "l" && isset($_POST["chat-id"])) {
     // l -> get last message and time
     $file = "../database/discussions/{$_POST["chat-id"]}.csv";
     if (file_exists($file)) {

@@ -1,7 +1,25 @@
 const img_folder = "database/images/"
 const group_img = img_folder + "group.png";
 
+function waitForElm(selector) {
+    return new Promise(resolve => {
+        if (document.querySelector(selector)) {
+            return resolve(document.querySelector(selector));
+        }
 
+        const observer = new MutationObserver(mutations => {
+            if (document.querySelector(selector)) {
+                resolve(document.querySelector(selector));
+                observer.disconnect();
+            }
+        });
+
+        observer.observe(document.body, {
+            childList: true,
+            subtree: true
+        });
+    });
+}
 
 function set_onclick_buttons() {
     function send_message() {
@@ -15,9 +33,8 @@ function set_onclick_buttons() {
 
         // save in database
         let chat_id = chat_selected.getAttribute("chat-id");
-        let user_id = document.getElementById("user-id").getAttribute("value");
 
-        let params = `function=m&chat-id=${chat_id}&user-id=${user_id}&msg=${text}`;
+        let params = `f=m&chat-id=${chat_id}&msg=${text}`;
         simpleAjax("php/put-data.php", "post", params, void_f, on_failure);
 
 
@@ -40,13 +57,30 @@ function set_onclick_buttons() {
         if (e.key == "Enter") {
             send_message();
         }
-    })
-    document.querySelectorAll(".items .item").forEach(tab => {
-        tab.onclick = function () {
-            // TODO add functions
-        }
-    })
+    });
 
+    // create channel
+    waitForElm(".add-channel img").then(elem => {
+        elem.onclick = function () {
+            console.log("click");
+            let input = document.querySelector(".add-channel input.write-message");
+            // TODO add image
+
+            if (input.value) {
+                let name = input.value;
+                simpleAjax("php/put-data.php", "post", "f=g&name=" + name + "&img= ", request => {
+                    let chat_id = request.responseText;
+                    let chat = { "is_channel": true, "name": name, "img": "" };
+                    let client_id = document.getElementById("client-id").getAttribute("value");
+                    simpleAjax("php/get-data.php", "post", "f=i&user-id=" + client_id, request => {
+                        let client = JSON.parse(request.responseText);
+                        display_discussion(chat, chat_id, client);
+                    }, on_failure);
+                }, on_failure);
+                input.value = "";
+            }
+        }
+    });
 }
 
 

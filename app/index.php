@@ -1,6 +1,6 @@
 <?php
 session_start();
-$_SESSION["user"] = "jaime";
+$_SESSION["client"] = "jaime";
 ?>
 
 <!DOCTYPE html>
@@ -27,12 +27,12 @@ $_SESSION["user"] = "jaime";
     <!-- user_id -->
     <div>
       <?php
-      echo "<span id='user-id' value='{$_SESSION["user"]}'/>";
+      echo "<span id='client-id' value='{$_SESSION["client"]}'/>";
       ?>
     </div>
     <!-- loged as -->
     <p>
-      <?php echo "Loged as: {$_SESSION["user"]}"; ?>
+      <?php echo "Loged as: {$_SESSION["client"]}"; ?>
     </p>
 
     <div id="msg-test"></div>

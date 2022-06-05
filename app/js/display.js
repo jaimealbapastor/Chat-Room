@@ -85,24 +85,28 @@ function display_panel_add() {
         // TODO add discussion to database 
     };
 
-    // add textarea
+    // TODO add textarea
     let texarea = document.createElement("input");
     texarea.type = "text";
     texarea.classList.add("write-message");
     texarea.placeholder = "Create channel...";
-    panel_add.appendChild(texarea);
+
+    // upload image
+    let img = document.createElement("input");
+    img.type = "file";
+
 
     // add image
-    let img = document.createElement("img");
-    img.src = "database/images/add.png";
-
+    let icon = document.createElement("img");
+    icon.src = "database/images/add.png";
 
     // let photo = document.createElement("div");
     // photo.className = "photo";
     // photo.style.backgroundImage = "url(database/images/add.png)";
 
     // fit together the elements 
-    panel_add.appendChild(img);
+    panel_add.appendChild(texarea);
+    panel_add.appendChild(icon);
     document.querySelector("section.discussions").appendChild(panel_add);
 }
 
@@ -118,7 +122,7 @@ open_chat = (discussion, client_id) => {
     // Display old messages
     let chat = document.querySelector("section.chat .messages-chat");
     chat.innerHTML = "";
-    simpleAjax("php/get-data.php", "post", `function=m&chat-id=${discussion.getAttribute("chat-id")}`, request => {
+    simpleAjax("php/get-data.php", "post", `f=m&chat-id=${discussion.getAttribute("chat-id")}`, request => {
         if (request.responseText) {
             let messages = JSON.parse(request.responseText);
             let last_id = client_id;
@@ -171,8 +175,8 @@ function display_discussion(chat, chat_id, client) {
     } else {
         // select the other user's profile photo
         let param;
-        if (chat["members"][0] != client["user-id"]) param = `function=i&user-id=${chat["members"][0]}`;
-        else param = `function=i&user-id=${chat["members"][1]}`;
+        if (chat["members"][0] != client["user-id"]) param = `f=i&user-id=${chat["members"][0]}`;
+        else param = `f=i&user-id=${chat["members"][1]}`;
 
         simpleAjax("php/get-data.php", "post", param, request => {
             let contact = JSON.parse(request.responseText);
@@ -189,10 +193,10 @@ function display_discussion(chat, chat_id, client) {
         }, on_failure);
     }
 
-    let param = "function=l&chat-id=" + chat_id;
+    let param = "f=l&chat-id=" + chat_id;
     simpleAjax("php/get-data.php", "post", param, request => {
         let [id, time, text] = request.responseText.split(";");
-        console.log(request.responseText);
+
         if (text !== undefined) message.innerHTML = text;
         timer.innerHTML = "0 sec";
         if (time !== undefined) {
@@ -220,14 +224,14 @@ function load_chatroom(user_id) {
 
         let user = JSON.parse(request.responseText);    // TODO change let -> const
 
-        let user_hidden_tag = document.getElementById("user-id");
+        let user_hidden_tag = document.getElementById("client-id");
         user_hidden_tag.setAttribute("profile-img", user["profile-img"]);
 
         display_panel_add();
 
         // display existing chats on the left side
         user["chats"].forEach(chat_id => {
-            simpleAjax("php/get-data.php", "post", `function=c&chat-id=${chat_id}`, request => {
+            simpleAjax("php/get-data.php", "post", `f=c&chat-id=${chat_id}`, request => {
                 let chat = JSON.parse(request.responseText);
                 display_discussion(chat, chat_id, user);
             }, on_failure);
@@ -236,6 +240,6 @@ function load_chatroom(user_id) {
     }
 
     // get info about the user loged
-    let params = `function=i&user-id=${user_id}`;
+    let params = `f=i&user-id=${user_id}`;
     simpleAjax("php/get-data.php", "post", params, display_chats, on_failure);
 }
