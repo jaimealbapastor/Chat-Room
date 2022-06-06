@@ -132,13 +132,11 @@ open_chat = (discussion, client_id) => {
             let last_id = client_id;
 
             for (let i = 0; i < messages.length; ++i) { // TODO verificar foreach
-                [id, date, msg] = messages[i].split(";"); // añadir let
-                date = new Date(Date.parse(date));
-                display_msg(msg, toHHMM(date), chat, (id == client_id), (id != last_id));
-                simpleAjax("php/ajax/get/user-info.php", "post", "user-id=" + id, request => {
-                    display_msg(msg, id)
 
-                }, on_failure);
+                [id, sender_name, date, msg] = messages[i].split(";"); // añadir let
+                date = new Date(Date.parse(date));
+
+                display_msg(msg, sender_name, toHHMM(date), (id == client_id), (id != last_id));
                 last_id = id;
             }
         }
@@ -146,6 +144,7 @@ open_chat = (discussion, client_id) => {
 }
 
 function display_discussion(chat, chat_id, client_id) {
+    // -> display a single chat on the side
 
     // <div class="discussion message-active">
     let discussion = document.createElement("div");
@@ -176,9 +175,7 @@ function display_discussion(chat, chat_id, client_id) {
     if (chat["is_channel"]) {
         // TODO hacer esto
         name.innerHTML = chat["name"];
-
-        if (chat["img"] == "") photo.style.backgroundImage = "url(" + group_img + ")";
-        else photo.style.backgroundImage = "url(" + chat["img"] + ")";
+        photo.style.backgroundImage = "url(" + group_img + ")";
 
     } else {
         // select the other user's profile photo
@@ -189,23 +186,14 @@ function display_discussion(chat, chat_id, client_id) {
         simpleAjax("php/ajax/get/user-info.php", "post", param, request => {
             let contact = JSON.parse(request.responseText);
 
-            name.innerHTML = contact["name"];
-            if (contact["img"]) photo.style.backgroundImage = "url(" + img_folder + contact["img"] + ")";
-            else photo.style.backgroundImage = "url(" + img_folder + "user.png)";
-
-            // TODO what to do with online?
-            // if (contact["online"]) {
-            //     // <div class="online"></div>
-            //     let online = document.createElement("div");
-            //     online.className = "online";
-            //     photo.appendChild(online);
-            // }
+            name.innerHTML = contact.name;
+            photo.style.backgroundImage = "url(" + img_folder + "user.png)";
         }, on_failure);
     }
 
     let param = "chat-id=" + chat_id;
     simpleAjax("php/ajax/get/last-msg-time.php", "post", param, request => {
-        let [id, time, text] = request.responseText.split(";");
+        let [id, name, time, text] = request.responseText.split(";");
 
         if (text !== undefined) message.innerHTML = text;
         timer.innerHTML = "0 sec";

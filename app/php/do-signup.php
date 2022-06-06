@@ -33,6 +33,7 @@ if (!isset($_SESSION["badsignup"])) {
 
     file_put_contents($users_file, implode("\n", $users));
     $_SESSION["client"] = $user_id;
+    $_SESSION["name"] = $name;
 
     header("Location: ../index.php");
 } else {

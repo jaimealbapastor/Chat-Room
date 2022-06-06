@@ -9,13 +9,13 @@ if (isset($_POST["user-id"])) {
         if ($data[0] == $_POST["user-id"]) {
             $user["user-id"] = $data[0];
             $user["email"] = $data[1];
-            $user["pwd"] = $data[2];
+            // $user["pwd"] = $data[2];
             $user["name"] = $data[3];
 
             echo json_encode($user);
             exit();
         }
     }
-    echo $_POST["user-id"];
+    echo json_encode(["user-id" => $_POST["user-id"], "name" => "unknown"]);
 }
 exit();

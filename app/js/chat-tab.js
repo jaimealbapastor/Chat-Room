@@ -24,24 +24,23 @@ function waitForElm(selector) {
 function set_onclick_buttons() {
     function send_message() {
 
-        let text = document.querySelector(".footer-chat .write-message").value;
+        const text = document.querySelector(".footer-chat .write-message").value;
 
         if (!text) return; // check if there is text
 
-        let chat_selected = document.querySelector(".discussions div[class='discussion message-active']");
+        const chat_selected = document.querySelector(".discussions div[class='discussion message-active']");
         if (chat_selected == null) return; // check if a chat is selected
 
         // save in database
-        let chat_id = chat_selected.getAttribute("chat-id");
-
+        const chat_id = chat_selected.getAttribute("chat-id");
         let params = `chat-id=${chat_id}&msg=${text}`;
         simpleAjax("php/ajax/put/add-message.php", "post", params, void_f, on_failure);
 
-
         // display message
-        let container = document.querySelector("section.chat .messages-chat");
+        const container = document.querySelector("section.chat .messages-chat");
         let date = new Date(Date.now());
-        display_msg(text, toHHMM(date), container, true, false);
+        const client_name = document.getElementById("client-id").getAttribute("name");
+        display_msg(text, client_name, toHHMM(date), true, false);
 
         // clear typed message
         document.querySelector(".footer-chat .write-message").value = "";
@@ -53,7 +52,7 @@ function set_onclick_buttons() {
 
     // send message button
     document.querySelector(".send").onclick = send_message;
-    document.querySelector(".write-message").addEventListener("keyup", e => {
+    document.querySelector("section.chat .write-message").addEventListener("keyup", e => {
         if (e.key == "Enter") {
             send_message();
         }
@@ -62,7 +61,6 @@ function set_onclick_buttons() {
     // create channel
     waitForElm(".add-channel img").then(elem => {
         elem.onclick = function () {
-            console.log("click");
             let input = document.querySelector(".add-channel input.write-message");
             // TODO add image
 
@@ -81,6 +79,10 @@ function set_onclick_buttons() {
             }
         }
     });
+}
+
+function check_new_messages() {
+    simpleAjax("php/ajax/get/all-chats.php", "post",)
 }
 
 
