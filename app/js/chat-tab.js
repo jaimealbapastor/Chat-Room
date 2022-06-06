@@ -40,7 +40,7 @@ function set_onclick_buttons() {
         const container = document.querySelector("section.chat .messages-chat");
         let date = new Date(Date.now());
         const client_name = document.getElementById("client-id").getAttribute("name");
-        display_msg(text, client_name, toHHMM(date), true, false);
+        msgHtml(text, client_name, toHHMM(date), true, false);
 
         // clear typed message
         document.querySelector(".footer-chat .write-message").value = "";
@@ -58,47 +58,53 @@ function set_onclick_buttons() {
         }
     });
 
-    // create channel
-    waitForElm(".add-channel img").then(elem => {
-        elem.onclick = function () {
-            let input = document.querySelector(".add-channel input.write-message");
-            // TODO add image
+    // // create channel
+    // waitForElm(".add-channel img").then(elem => {
+    //     elem.onclick = function () {
+    //         const input = document.querySelector(".add-channel input.write-message");
+    //         // TODO add image
 
-            if (input.value) {
-                let name = input.value;
-                simpleAjax("php/ajax/put/new-channel.php", "post", "name=" + name + "&img= ", request => {
-                    let chat_id = request.responseText;
-                    let chat = { "is_channel": true, "name": name, "img": "" };
-                    let client_id = document.getElementById("client-id").getAttribute("value");
-                    simpleAjax("php/ajax/get/user-info.php", "post", "user-id=" + client_id, request => {
-                        let client = JSON.parse(request.responseText);
-                        display_discussion(chat, chat_id, client);
-                    }, on_failure);
-                }, on_failure);
-                input.value = "";
-            }
-        }
-    });
+    //         if (input.value) {
+    //             const name = input.value;
+    //             simpleAjax("php/ajax/put/new-channel.php", "post", "name=" + name + "&img= ", request => {
+    //                 const chat_id = request.responseText;
+    //                 const chat = { "is_channel": true, "name": name, "img": "" };
+    //                 const client_id = document.getElementById("client-id").getAttribute("value");
+    //                 simpleAjax("php/ajax/get/user-info.php", "post", "user-id=" + client_id, request => {
+    //                     const client = JSON.parse(request.responseText);
+    //                     sideChatHtml(chat, chat_id, client);
+    //                 }, on_failure);
+    //             }, on_failure);
+    //             input.value = "";
+    //         }
+    //     }
+    // });
 }
 
-function check_new_messages() {
-    simpleAjax("php/ajax/get/all-chats.php", "post",)
+function checkNewMsg() {
+    const discussion = document.querySelector(".discussions div.message-active");
+    if (discussion != null) {
+        const client_id = document.getElementById("client-id").value;
+        updateNewMsg(discussion, client_id);
+    }
 }
-
 
 window.onload = function () {
+    // Ajax error tag
     document.getElementById("msg-test").style.color = "red";
     document.getElementById("msg-test").onclick = function () { this.style.visibility = "collapse"; }
 
-    let client_id = document.getElementById("client-id").getAttribute("value");
-    load_chatroom(client_id);
+    const client_id = document.getElementById("client-id").getAttribute("value");
+    loadChatroom(client_id);
     set_onclick_buttons();
 
     window.setInterval(function () {
         document.querySelectorAll(".discussion .timer[time]").forEach(timer => {
-            timer.innerHTML = diff_time(Date.parse(timer.getAttribute("time")), Date.now());
+            timer.innerHTML = timeDiff(Date.parse(timer.getAttribute("time")), Date.now());
         });
     }, 1000);
+
+    window.setInterval(checkNewMsg, 1000);
 
     document.getElementById("signout").onclick = function () {
         window.location.href = "php/signout.php";
