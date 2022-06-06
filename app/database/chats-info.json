@@ -1,1 +1,30 @@
-{"chat629e1a2f5acf3":{"is_channel":true,"name":"test","members":["user629e19f5e52b4"]},"chat629e1dc0b5287":{"is_channel":true,"name":"new","members":["user629e19f5e52b4"]},"chat629e1f2855271":{"is_channel":true,"name":"bebe","members":["user629e19f5e52b4"]}}
+{
+    "chat629e1a2f5acf3": {
+        "is_channel": true,
+        "name": "test",
+        "members": [
+            "user629e19f5e52b4"
+        ]
+    },
+    "chat629e1dc0b5287": {
+        "is_channel": true,
+        "name": "new",
+        "members": [
+            "user629e19f5e52b4"
+        ]
+    },
+    "chat629e1f2855271": {
+        "is_channel": true,
+        "name": "bebe",
+        "members": [
+            "user629e19f5e52b4"
+        ]
+    },
+    "chat629e2be947a36": {
+        "is_channel": true,
+        "name": "TEst2",
+        "members": [
+            "user629e19f5e52b4"
+        ]
+    }
+}

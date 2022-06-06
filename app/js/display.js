@@ -47,7 +47,6 @@ function msgHtml(msg, sender_name, time, is_response, is_first_msg) {
 
     //<div class="photo" style="background-image: url();">
     if (!is_response && is_first_msg) {
-        // const name_label = document.querySelector("section.discussions .message-active .name").cloneNode(true);
         const name_label = document.createElement("p");
         name_label.innerHTML = sender_name;
         message.appendChild(name_label);
@@ -111,10 +110,6 @@ function pannelAddChannel() {
             textarea.value = "";
         }
     }
-
-    // const photo = document.createElement("div");
-    // photo.className = "photo";
-    // photo.style.backgroundImage = "url(database/images/add.png)";
 
     // fit together the elements 
     panel_add.appendChild(textarea);
@@ -229,23 +224,39 @@ function sideChatHtml(chat, chat_id, client_id) {
     document.querySelector("section.discussions").appendChild(discussion);
 
 }
+
+function checkActiveSideChats(client_id) {
+    simpleAjax("php/ajax/get/all-chats.php", "post", "", request => {
+        const chats = JSON.parse(request.responseText);
+
+        Object.keys(chats).forEach(key => {
+            if (!Object.keys(all_chats).includes(key)) {
+                all_chats[key] = chats[key];
+
+            } if (!Object.keys(active_chats).includes(key) && chats[key].members.includes(client_id)) {
+                active_chats[key] = chats[key];
+            }
+        });
+    }, on_failure);
+}
+
 function loadChatroom(client_id) {
     // -> load the whole chatroom
 
     // display panel to add channel
     pannelAddChannel();
 
-    // get chats in which client participates
-    simpleAjax("php/ajax/get/all-chats.php", "post", "", request => {
+    // fill chat lists in which client participates
+    checkActiveSideChats(client_id);
+
+
+    // wait for lists to fill out
+    window.setTimeout(() => {
 
         // display existing chats on the left side
-        const chats = JSON.parse(request.responseText);
-        Object.keys(chats).forEach(key => {
-            //if (chats[key]["members"].includes(client_id)) // TODO add if
-
-            sideChatHtml(chats[key], key, client_id);
+        Object.keys(active_chats).forEach(key => {
+            sideChatHtml(active_chats[key], key, client_id);
         });
-
-    }, on_failure);
+    }, 100)
 
 }

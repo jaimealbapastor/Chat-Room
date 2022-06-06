@@ -47,20 +47,17 @@ if (!isset($_SESSION["client"])) header("Location: php/signin-up.php");
             <!-- <li class="item">
               <i class="fa fa-home" aria-hidden="true"></i>
             </li> -->
-            <li class="item user-tab">
-              <i class="fa fa-user" aria-hidden="true"></i>
+            <li class="item user-tab item-active" id="maison">
+              <img src=" database/images/home.png" style="width: 45%;" />
             </li>
-            <li class="item chat-tab item-active">
-              <i class="fa fa-commenting" aria-hidden="true"></i>
+            <li class="item chat-tab" id="all-chats">
+              <img src="database/images/all-chats.png" style="width: 50%;" />
             </li>
             <li class="item create-tab">
               <i class="fa fa-pencil" aria-hidden="true"></i>
             </li>
-            <!-- <li class="item">
-              <i class="fa fa-file" aria-hidden="true"></i>
-            </li> -->
             <li class="item" id="signout">
-              <i class="fa fa-cog" aria-hidden="true"></i>
+              <img src="database/images/logout.png" style="width: 40%;" />
             </li>
           </ul>
         </nav>

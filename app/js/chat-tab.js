@@ -21,7 +21,7 @@ function waitForElm(selector) {
     });
 }
 
-function set_onclick_buttons() {
+function set_onclick_buttons(client_id) {
     function send_message() {
 
         const text = document.querySelector(".footer-chat .write-message").value;
@@ -58,27 +58,39 @@ function set_onclick_buttons() {
         }
     });
 
-    // // create channel
-    // waitForElm(".add-channel img").then(elem => {
-    //     elem.onclick = function () {
-    //         const input = document.querySelector(".add-channel input.write-message");
-    //         // TODO add image
+    // search bar
+    const search_bar = document.querySelector(".searchbar input");
+    search_bar.addEventListener("keyup", e => {
+        let filter = search_bar.value.toLowerCase();
+        console.log("here")
+        if (filter) {
+            document.querySelectorAll(".discussions .discussion[chat-id]").forEach(chat => {
+                let name = chat.querySelector(".name").innerHTML.toLowerCase();
+                if (!name.includes(filter)) {
+                    chat.style.display = "none";
+                } else {
+                    chat.style.display = "flex";
 
-    //         if (input.value) {
-    //             const name = input.value;
-    //             simpleAjax("php/ajax/put/new-channel.php", "post", "name=" + name + "&img= ", request => {
-    //                 const chat_id = request.responseText;
-    //                 const chat = { "is_channel": true, "name": name, "img": "" };
-    //                 const client_id = document.getElementById("client-id").getAttribute("value");
-    //                 simpleAjax("php/ajax/get/user-info.php", "post", "user-id=" + client_id, request => {
-    //                     const client = JSON.parse(request.responseText);
-    //                     sideChatHtml(chat, chat_id, client);
-    //                 }, on_failure);
-    //             }, on_failure);
-    //             input.value = "";
-    //         }
-    //     }
-    // });
+                }
+            });
+
+        } else {
+            document.querySelectorAll(".discussions .discussion[chat-id]").forEach(chat => {
+                chat.style.display = "flex";
+            })
+        }
+    });
+
+    // menu buttons
+    function selectMenu(button) {
+        document.querySelector(".items .item-active").classList.remove("item-active");
+        button.classList.add("item-active");
+    }
+
+    document.getElementById("maison").onclick = () => {
+        selectMenu(this);
+        loadChatroom(client_id);
+    }
 }
 
 function checkNewMsg() {
@@ -88,6 +100,9 @@ function checkNewMsg() {
         updateNewMsg(discussion, client_id);
     }
 }
+
+const active_chats = [];
+const all_chats = [];
 
 window.onload = function () {
     // Ajax error tag
