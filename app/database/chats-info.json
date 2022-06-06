@@ -2,8 +2,8 @@
     "id-chat-1": {
         "is_channel": false,
         "members": [
-            "jaime",
-            "anais"
+            "user629d22ddc6655",
+            "user629dbfa0861d8"
         ]
     },
     "id-chat-2": {
@@ -11,16 +11,14 @@
         "name": "PEIP2",
         "img": "",
         "members": [
-            "jaime",
-            "anais",
-            "darwin"
+            "user629dbfa0861d8",
+            "user629dbf8cdfd54"
         ]
     },
     "id-chat-3": {
         "is_channel": false,
         "members": [
-            "jaime",
-            "darwin"
+            "user629dbf8cdfd54"
         ]
     }
 }

@@ -1,6 +1,7 @@
 <?php
 session_start();
-$_SESSION["client"] = "jaime";
+if (!isset($_SESSION["client"])) header("Location: php/signin-up.php");
+
 ?>
 
 <!DOCTYPE html>
@@ -30,7 +31,7 @@ $_SESSION["client"] = "jaime";
       echo "<span id='client-id' value='{$_SESSION["client"]}'/>";
       ?>
     </div>
-    <!-- loged as -->
+    <!-- logged as -->
     <p>
       <?php echo "Loged as: {$_SESSION["client"]}"; ?>
     </p>
@@ -58,7 +59,7 @@ $_SESSION["client"] = "jaime";
             <!-- <li class="item">
               <i class="fa fa-file" aria-hidden="true"></i>
             </li> -->
-            <li class="item">
+            <li class="item" id="signout">
               <i class="fa fa-cog" aria-hidden="true"></i>
             </li>
           </ul>

@@ -34,8 +34,8 @@ function set_onclick_buttons() {
         // save in database
         let chat_id = chat_selected.getAttribute("chat-id");
 
-        let params = `f=m&chat-id=${chat_id}&msg=${text}`;
-        simpleAjax("php/put-data.php", "post", params, void_f, on_failure);
+        let params = `chat-id=${chat_id}&msg=${text}`;
+        simpleAjax("php/ajax/put/add-message.php", "post", params, void_f, on_failure);
 
 
         // display message
@@ -68,11 +68,11 @@ function set_onclick_buttons() {
 
             if (input.value) {
                 let name = input.value;
-                simpleAjax("php/put-data.php", "post", "f=g&name=" + name + "&img= ", request => {
+                simpleAjax("php/ajax/put/new-channel.php", "post", "name=" + name + "&img= ", request => {
                     let chat_id = request.responseText;
                     let chat = { "is_channel": true, "name": name, "img": "" };
                     let client_id = document.getElementById("client-id").getAttribute("value");
-                    simpleAjax("php/get-data.php", "post", "f=i&user-id=" + client_id, request => {
+                    simpleAjax("php/ajax/get/user-info.php", "post", "user-id=" + client_id, request => {
                         let client = JSON.parse(request.responseText);
                         display_discussion(chat, chat_id, client);
                     }, on_failure);
@@ -88,7 +88,8 @@ window.onload = function () {
     document.getElementById("msg-test").style.color = "red";
     document.getElementById("msg-test").onclick = function () { this.style.visibility = "collapse"; }
 
-    load_chatroom("jaime");
+    let client_id = document.getElementById("client-id").getAttribute("value");
+    load_chatroom(client_id);
     set_onclick_buttons();
 
     window.setInterval(function () {
@@ -96,6 +97,10 @@ window.onload = function () {
             timer.innerHTML = diff_time(Date.parse(timer.getAttribute("time")), Date.now());
         });
     }, 1000);
+
+    document.getElementById("signout").onclick = function () {
+        window.location.href = "php/signout.php";
+    }
 }
 
 

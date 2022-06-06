@@ -29,7 +29,9 @@ function diff_time(dt1, dt2) {
     return Math.round(diff / (3600 * 24 * 365)) + " years";
 }
 
-function display_msg(msg, time, container, is_response, is_first_msg) {
+function display_msg(msg, sender_name, time, is_response, is_first_msg) {
+    const container = document.querySelector("section.chat .messages-chat");
+
     // delete time tag
     if (!is_first_msg) {
         if (container.lastChild !== null && container.lastChild.classList.contains("time")) {
@@ -45,9 +47,11 @@ function display_msg(msg, time, container, is_response, is_first_msg) {
     if (is_response || !is_first_msg) message.classList.add("text-only");
 
     //<div class="photo" style="background-image: url();">
-    if (!is_response) {
-        let photo = document.querySelector("section.discussions .message-active .photo").cloneNode(true);
-        message.appendChild(photo);
+    if (!is_response && is_first_msg) {
+        // const name_label = document.querySelector("section.discussions .message-active .name").cloneNode(true);
+        const name_label = document.createElement("p");
+        name_label.innerHTML = sender_name;
+        message.appendChild(name_label);
     }
 
     // <p class="text">
@@ -122,7 +126,7 @@ open_chat = (discussion, client_id) => {
     // Display old messages
     let chat = document.querySelector("section.chat .messages-chat");
     chat.innerHTML = "";
-    simpleAjax("php/get-data.php", "post", `f=m&chat-id=${discussion.getAttribute("chat-id")}`, request => {
+    simpleAjax("php/ajax/get/chat-messages.php", "post", `chat-id=${discussion.getAttribute("chat-id")}`, request => {
         if (request.responseText) {
             let messages = JSON.parse(request.responseText);
             let last_id = client_id;
@@ -131,19 +135,23 @@ open_chat = (discussion, client_id) => {
                 [id, date, msg] = messages[i].split(";"); // añadir let
                 date = new Date(Date.parse(date));
                 display_msg(msg, toHHMM(date), chat, (id == client_id), (id != last_id));
+                simpleAjax("php/ajax/get/user-info.php", "post", "user-id=" + id, request => {
+                    display_msg(msg, id)
+
+                }, on_failure);
                 last_id = id;
             }
         }
     }, on_failure)
 }
 
-function display_discussion(chat, chat_id, client) {
+function display_discussion(chat, chat_id, client_id) {
 
     // <div class="discussion message-active">
     let discussion = document.createElement("div");
     discussion.classList.add("discussion");
     discussion.setAttribute("chat-id", chat_id);
-    discussion.onclick = () => { open_chat(discussion, client["user-id"], client["profile-img"]) };
+    discussion.onclick = () => { open_chat(discussion, client_id) }; // TODO aqui
 
     // <div class="photo" style="background-image: url();">
     let photo = document.createElement("div");
@@ -175,26 +183,28 @@ function display_discussion(chat, chat_id, client) {
     } else {
         // select the other user's profile photo
         let param;
-        if (chat["members"][0] != client["user-id"]) param = `f=i&user-id=${chat["members"][0]}`;
-        else param = `f=i&user-id=${chat["members"][1]}`;
+        if (chat["members"][0] != client_id) param = `user-id=${chat["members"][0]}`;
+        else param = `user-id=${chat["members"][1]}`;
 
-        simpleAjax("php/get-data.php", "post", param, request => {
+        simpleAjax("php/ajax/get/user-info.php", "post", param, request => {
             let contact = JSON.parse(request.responseText);
 
-            name.innerHTML = contact["personal"]["first-name"] + " " + contact["personal"]["last-name"];
-            photo.style.backgroundImage = "url(" + img_folder + contact["profile-img"] + ")";
+            name.innerHTML = contact["name"];
+            if (contact["img"]) photo.style.backgroundImage = "url(" + img_folder + contact["img"] + ")";
+            else photo.style.backgroundImage = "url(" + img_folder + "user.png)";
 
-            if (contact["online"]) {
-                // <div class="online"></div>
-                let online = document.createElement("div");
-                online.className = "online";
-                photo.appendChild(online);
-            }
+            // TODO what to do with online?
+            // if (contact["online"]) {
+            //     // <div class="online"></div>
+            //     let online = document.createElement("div");
+            //     online.className = "online";
+            //     photo.appendChild(online);
+            // }
         }, on_failure);
     }
 
-    let param = "f=l&chat-id=" + chat_id;
-    simpleAjax("php/get-data.php", "post", param, request => {
+    let param = "chat-id=" + chat_id;
+    simpleAjax("php/ajax/get/last-msg-time.php", "post", param, request => {
         let [id, time, text] = request.responseText.split(";");
 
         if (text !== undefined) message.innerHTML = text;
@@ -216,30 +226,23 @@ function display_discussion(chat, chat_id, client) {
     //TODO change chat-id <- not secures
 
 }
-function load_chatroom(user_id) {
+function load_chatroom(client_id) {
     // -> load the whole chatroom
 
-    display_chats = request => {
-        // -> display the discussions
+    // display panel to add channel
+    display_panel_add();
 
-        let user = JSON.parse(request.responseText);    // TODO change let -> const
-
-        let user_hidden_tag = document.getElementById("client-id");
-        user_hidden_tag.setAttribute("profile-img", user["profile-img"]);
-
-        display_panel_add();
+    // get chats in which client participates
+    simpleAjax("php/ajax/get/all-chats.php", "post", "", request => {
 
         // display existing chats on the left side
-        user["chats"].forEach(chat_id => {
-            simpleAjax("php/get-data.php", "post", `f=c&chat-id=${chat_id}`, request => {
-                let chat = JSON.parse(request.responseText);
-                display_discussion(chat, chat_id, user);
-            }, on_failure);
+        const chats = JSON.parse(request.responseText);
+        Object.keys(chats).forEach(key => {
+            //if (chats[key]["members"].includes(client_id)) // TODO add if
+
+            display_discussion(chats[key], key, client_id);
         });
 
-    }
+    }, on_failure);
 
-    // get info about the user loged
-    let params = `f=i&user-id=${user_id}`;
-    simpleAjax("php/get-data.php", "post", params, display_chats, on_failure);
 }
