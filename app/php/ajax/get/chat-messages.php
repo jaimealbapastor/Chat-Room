@@ -7,7 +7,5 @@ if (isset($_POST["chat-id"])) {
     if (file_exists($file)) {
         $content = file($file, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
         echo json_encode($content);
-    } else {
-        // TODO create file if not exists
     }
 }

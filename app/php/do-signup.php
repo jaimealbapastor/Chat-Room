@@ -7,7 +7,7 @@ unset($_SESSION["badsignup"]);
 $users_file = "../database/users.csv";
 $users = file($users_file, FILE_IGNORE_NEW_LINES);
 
-// le login est déjà utilisé
+// vérifier si le login est déjà utilisé
 foreach ($users as $line) {
     $data = explode(";", $line);
     if ($_POST["email"] == $data[1]) {
@@ -23,17 +23,13 @@ foreach ($users as $line) {
 if (!isset($_SESSION["badsignup"])) {
     // ajouter nom au fichier csv
 
-    $user_id = uniqid("user", false);
+    $user_id = $_POST["name"]; // on pourrait utiliser la fonction uniqid
     $email = $_POST["email"];
     $pwd = md5($_POST["password"]);
-    $name = $_POST["name"];
-    $img = "";
-
-    $users[] = "$user_id;$email;$pwd;$name;$img";
+    $users[] = "$user_id;$email;$pwd";
 
     file_put_contents($users_file, implode("\n", $users));
     $_SESSION["client"] = $user_id;
-    $_SESSION["name"] = $name;
 
     header("Location: ../index.php");
 } else {

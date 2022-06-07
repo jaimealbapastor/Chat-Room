@@ -28,7 +28,7 @@ if (!isset($_SESSION["client"])) header("Location: php/signin-up.php");
     <!-- user_id -->
     <div>
       <?php
-      echo "<span id='client-id' value='{$_SESSION["client"]}' name='{$_SESSION["name"]}'/>";
+      echo "<span id='client-id' value='{$_SESSION["client"]}'/>";
       ?>
     </div>
     <!-- logged as -->

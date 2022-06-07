@@ -3,9 +3,13 @@
 
 if (isset($_POST["chat-id"])) {
     $file = "../../../database/discussions/{$_POST["chat-id"]}.csv";
+
     if (file_exists($file)) {
+
         $array = file($file, FILE_IGNORE_NEW_LINES);
         $i = count($array) - 1;
+
+        // a way to avoid an empty value
         while ($i >= 0 && !$array[$i]) {
             $i--;
         }

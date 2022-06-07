@@ -82,14 +82,19 @@ function set_onclick_buttons(client_id) {
     });
 
     // menu buttons
-    function selectMenu(button) {
+    function selectMenu(selector) {
+
+        const button = document.querySelector(selector);
         document.querySelector(".items .item-active").classList.remove("item-active");
         button.classList.add("item-active");
     }
 
     document.getElementById("maison").onclick = () => {
-        selectMenu(this);
+        selectMenu("#maison");
         loadChatroom(client_id);
+    }
+    document.getElementById("all-chats").onclick = () => {
+        selectMenu("#all-chats");
     }
 }
 
