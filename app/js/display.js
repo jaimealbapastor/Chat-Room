@@ -28,6 +28,10 @@ function timeDiff(dt1, dt2) {
     return Math.round(diff / (3600 * 24 * 365)) + " years";
 }
 
+function clearChat() {
+    document.querySelector(".chat .messages-chat").innerHTML = "";
+}
+
 function msgHtml(msg, sender_name, time, is_response, is_first_msg) {
     const container = document.querySelector("section.chat .messages-chat");
 
@@ -120,30 +124,7 @@ function pannelAddChannel() {
     // fit together the elements 
     panel_add.appendChild(textarea);
     panel_add.appendChild(icon);
-    document.querySelector("section.discussions").appendChild(panel_add);
-}
-
-// TODO remove this function since updateNewMsg exists
-function oldMsg(discussion, client_id) {
-    // Display old messages
-    let chat = document.querySelector("section.chat .messages-chat");
-    chat.innerHTML = "";
-
-    simpleAjax("php/ajax/get/chat-messages.php", "post", "chat-id=" + discussion.getAttribute("chat-id"), request => {
-        if (request.responseText) {
-            let messages = JSON.parse(request.responseText);
-            let last_id = client_id;
-
-            for (let i = 0; i < messages.length; ++i) { // TODO verificar foreach
-
-                [sender_id, date, msg] = messages[i].split(";"); // añadir let
-                date = new Date(Date.parse(date));
-
-                msgHtml(msg, sender_id, toHHMM(date), (sender_id == client_id), (sender_id != last_id));
-                last_id = sender_id;
-            }
-        }
-    }, on_failure)
+    document.querySelector("section.discussions .search").after(panel_add);
 }
 
 function updateNewMsg(discussion, client_id) {
@@ -165,7 +146,15 @@ function updateNewMsg(discussion, client_id) {
                 last_id = sender_id;
             }
         }
-    }, on_failure)
+    }, on_failure);
+}
+
+function oldMsg(discussion, client_id) {
+    // Display old messages
+    let chat = document.querySelector("section.chat .messages-chat");
+    chat.innerHTML = "";
+
+    updateNewMsg(discussion, client_id);
 }
 
 function selectDiscussion(discussion) {
@@ -197,6 +186,34 @@ function sideChatHtml(chat_id, client_id) { //----------------------------
     let photo = document.createElement("div");
     photo.className = "photo";
     photo.style.backgroundImage = "url(" + group_img + ")";
+
+    // mouseover
+    photo.addEventListener("mouseout", event => {
+        photo.style.backgroundImage = "url(" + group_img + ")";
+        photo.onclick = void_f;
+    });
+
+    const menu_selected = document.querySelector(".items .item.item-active");
+    if (menu_selected.id == "home") {
+        photo.addEventListener("mouseover", event => {
+            photo.style.backgroundImage = "url(" + img_folder + "exit.png)";
+
+        });
+        photo.addEventListener("click", event => {
+            if (active_chats.includes(chat_id)) active_chats.splice(active_chats.indexOf(chat_id), 1);
+            discussion.style.display = "none";
+            clearChat();
+        });
+
+    } else if (menu_selected.id == "all-chats") {
+        photo.addEventListener("mouseover", event => {
+            photo.style.backgroundImage = "url(" + img_folder + "join.png)";
+        });
+        photo.addEventListener("click", event => {
+            if (!active_chats.includes(chat_id)) active_chats.push(chat_id);
+        });
+    }
+
 
     // <div class="desc-contact"></div>
     let desc_contact = document.createElement("div");
@@ -233,7 +250,7 @@ function sideChatHtml(chat_id, client_id) { //----------------------------
     desc_contact.appendChild(message);
     discussion.appendChild(desc_contact);
     discussion.appendChild(timer);
-    document.querySelector("section.discussions").appendChild(discussion);
+    document.querySelector("section.discussions .joined-chats").appendChild(discussion);
 
 }
 
@@ -245,11 +262,28 @@ function checkActiveSideChats(client_id) {
             if (!all_chats.includes(chat_id)) {
                 all_chats.push(chat_id);
 
-            } if (!active_chats.includes(client_id) && chats[chat_id].includes(client_id)) {
+            } if (!active_chats.includes(chat_id) && chats[chat_id].includes(client_id)) {
                 active_chats.push(chat_id);
             }
         });
     }, on_failure);
+}
+
+function loadChannels(client_id, channels) {
+    // fill chat lists in which client participates
+    checkActiveSideChats(client_id);
+
+    // clear previous chats
+    document.querySelector("section.discussions .joined-chats").innerHTML = "";
+
+    // wait for lists to fill out
+    window.setTimeout(() => {
+
+        // display existing chats on the left side
+        channels.forEach(chat_id => {
+            sideChatHtml(chat_id, client_id);
+        });
+    }, 100);
 }
 
 function loadChatroom(client_id) {
@@ -258,16 +292,5 @@ function loadChatroom(client_id) {
     // display panel to add channel
     pannelAddChannel();
 
-    // fill chat lists in which client participates
-    checkActiveSideChats(client_id);
-
-    // wait for lists to fill out
-    window.setTimeout(() => {
-
-        // display existing chats on the left side
-        active_chats.forEach(chat_id => {
-            sideChatHtml(chat_id, client_id);
-        });
-    }, 100)
-
+    loadChannels(client_id, active_chats);
 }

@@ -41,13 +41,13 @@ body {
 }
 
 .menu .items .item-active {
-  background-color: #5172c3;
+  background-color: #829de2;
   color: #FFF;
 }
 
 .menu .items .item:hover {
   cursor: pointer;
-  background-color: #4f6ebd;
+  background-color: #829de2;
   color: #cfe5ff;
 }
 

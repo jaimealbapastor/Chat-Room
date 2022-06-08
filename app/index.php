@@ -47,16 +47,16 @@ if (!isset($_SESSION["client"])) header("Location: php/signin-up.php");
             <!-- <li class="item">
               <i class="fa fa-home" aria-hidden="true"></i>
             </li> -->
-            <li class="item user-tab item-active" id="maison">
+            <li class="item user-tab item-active" id="home" title="My Channels">
               <img src=" database/images/home.png" style="width: 45%;" />
             </li>
-            <li class="item chat-tab" id="all-chats">
+            <li class="item chat-tab" id="all-chats" title="All Channels">
               <img src="database/images/all-chats.png" style="width: 50%;" />
             </li>
-            <li class="item create-tab">
+            <!-- <li class="item create-tab">
               <i class="fa fa-pencil" aria-hidden="true"></i>
-            </li>
-            <li class="item" id="signout">
+            </li> -->
+            <li class="item" id="signout" title="Logout">
               <img src="database/images/logout.png" style="width: 40%;" />
             </li>
           </ul>
@@ -72,7 +72,9 @@ if (!isset($_SESSION["client"])) header("Location: php/signin-up.php");
             </div>
           </div>
           <!-- Discussions -->
+          <div class="joined-chats">
 
+          </div>
         </section>
 
         <!-- Active Chat -->

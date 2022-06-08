@@ -22,6 +22,7 @@ function waitForElm(selector) {
 }
 
 function set_onclick_buttons(client_id) {
+
     function send_message() {
 
         const text = document.querySelector(".footer-chat .write-message").value;
@@ -37,10 +38,7 @@ function set_onclick_buttons(client_id) {
         simpleAjax("php/ajax/put/add-message.php", "post", params, void_f, on_failure);
 
         // display message
-        const container = document.querySelector("section.chat .messages-chat");
-        let date = new Date(Date.now());
-        const client_name = document.getElementById("client-id").getAttribute("name");
-        msgHtml(text, client_name, toHHMM(date), true, false);
+        checkNewMsg();
 
         // clear typed message
         document.querySelector(".footer-chat .write-message").value = "";
@@ -62,7 +60,7 @@ function set_onclick_buttons(client_id) {
     const search_bar = document.querySelector(".searchbar input");
     search_bar.addEventListener("keyup", e => {
         let filter = search_bar.value.toLowerCase();
-        console.log("here")
+
         if (filter) {
             document.querySelectorAll(".discussions .discussion[chat-id]").forEach(chat => {
                 let name = chat.querySelector(".name").innerHTML.toLowerCase();
@@ -88,14 +86,20 @@ function set_onclick_buttons(client_id) {
         document.querySelector(".items .item-active").classList.remove("item-active");
         button.classList.add("item-active");
     }
-
-    document.getElementById("maison").onclick = () => {
-        selectMenu("#maison");
-        loadChatroom(client_id);
+    //  onclick
+    document.getElementById("home").onclick = () => {
+        selectMenu("#home");
+        loadChannels(client_id, active_chats);
     }
     document.getElementById("all-chats").onclick = () => {
         selectMenu("#all-chats");
+        loadChannels(client_id, all_chats);
     }
+    //  mouseover
+    document.getElementById("home").addEventListener("mouseover", event => {
+
+    })
+
 }
 
 function checkNewMsg() {
@@ -116,7 +120,7 @@ window.onload = function () {
 
     const client_id = document.getElementById("client-id").getAttribute("value");
     loadChatroom(client_id);
-    set_onclick_buttons();
+    set_onclick_buttons(client_id);
 
     window.setInterval(function () {
         document.querySelectorAll(".discussion .timer[time]").forEach(timer => {
