@@ -45,8 +45,8 @@ a {
 
 button {
     border-radius: 20px;
-    border: 1px solid #FF4B2B;
-    background-color: #FF4B2B;
+    border: 1px solid #2d6a4f;
+    background-color: #2d6a4f;
     color: #FFFFFF;
     font-size: 12px;
     font-weight: bold;
@@ -70,7 +70,7 @@ button.ghost {
 }
 
 form {
-    background-color: #FFFFFF;
+    background-color: #d8f3dc;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -81,7 +81,7 @@ form {
 }
 
 input {
-    background-color: #eee;
+    background-color: #FFFFFF;
     border: none;
     padding: 12px 15px;
     margin: 8px 0;
@@ -89,10 +89,10 @@ input {
 }
 
 .container {
-    background-color: #fff;
+    background-color: #FFFFFF;
     border-radius: 10px;
-    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25),
-        0 10px 10px rgba(0, 0, 0, 0.22);
+    box-shadow: 0 14px 28px #40916c,
+        0 10px 10px #40916c;
     position: relative;
     overflow: hidden;
     width: 768px;
@@ -162,9 +162,9 @@ input {
 }
 
 .overlay {
-    background: #FF416C;
-    background: -webkit-linear-gradient(to right, #FF4B2B, #FF416C);
-    background: linear-gradient(to right, #FF4B2B, #FF416C);
+    background: #2d6a4f;
+    background: -webkit-linear-gradient(to right, #1b4332, #52b788);
+    background: linear-gradient(to right, #1b4332, #52b788);
     background-repeat: no-repeat;
     background-size: cover;
     background-position: 0 0;
@@ -245,7 +245,7 @@ footer p {
 }
 
 footer i {
-    color: red;
+    color: #2d6a4f;
 }
 
 footer a {

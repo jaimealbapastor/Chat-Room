@@ -87,11 +87,26 @@ function msgHtml(msg, sender_name, time, is_response, is_first_msg) {
     container.appendChild(time_tag);
 }
 
+function addChannel(textarea) {
+    if (textarea.value) {
+        const name = textarea.value;
+
+        simpleAjax("php/ajax/put/new-channel.php", "post", "name=" + name, request => {
+            const chat_id = request.responseText;
+            const client_id = document.getElementById("client-id").getAttribute("value");
+
+            sideChatHtml(chat_id, client_id);
+        }, on_failure);
+
+        textarea.value = "";
+    }
+}
+
 function pannelAddChannel() {
 
     //  <div class='discussion add-channel'>
     //      <input type='text' class='write-message'>Create channel...</input>
-    //      <img scr='database/images/add.png' onclick=add_new_channel/>
+    //      <img scr='database/images/add.png' onclick=addChannel/>
     //  </div>
 
     const panel_add = document.createElement("div");
@@ -103,22 +118,17 @@ function pannelAddChannel() {
     textarea.classList.add("write-message");
     textarea.placeholder = "Create channel...";
 
+    textarea.addEventListener("keyup", event => {
+        if (event.key == "Enter") {
+            addChannel(textarea);
+        }
+    });
+
     const icon = document.createElement("img");
     icon.src = "database/images/add.png";
 
     icon.onclick = () => {
-        if (textarea.value) {
-            const name = textarea.value;
-
-            simpleAjax("php/ajax/put/new-channel.php", "post", "name=" + name, request => {
-                const chat_id = request.responseText;
-                const client_id = document.getElementById("client-id").getAttribute("value");
-
-                sideChatHtml(chat_id, client_id);
-            }, on_failure);
-
-            textarea.value = "";
-        }
+        addChannel(textarea);
     }
 
     // fit together the elements 
