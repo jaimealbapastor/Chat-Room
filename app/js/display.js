@@ -30,10 +30,16 @@ function timeDiff(dt1, dt2) {
 
 function clearChat() {
     document.querySelector(".chat .messages-chat").innerHTML = "";
+    document.querySelector(".header-chat p.name").innerHTML = "";
 }
 
 function msgHtml(msg, sender_name, time, is_response, is_first_msg) {
     const container = document.querySelector("section.chat .messages-chat");
+
+    // console.log("msgHTML : " + msg);
+    // console.log("sender_name : " + sender_name);
+    // console.log("is_response : " + is_response);
+    // console.log("is_first_msg :" + is_first_msg)
 
     // delete previous time tag
     if (!is_first_msg) {
@@ -152,6 +158,9 @@ function updateNewMsg(discussion, client_id) {
                 [sender_id, date, msg] = messages[i].split(";"); // añadir let
                 date = new Date(Date.parse(date));
 
+                // console.log("before : " + msg)
+                // console.log("sender: " + sender_id + " & client: " + client_id);
+
                 msgHtml(msg, sender_id, toHHMM(date), (sender_id == client_id), (sender_id != last_id));
                 last_id = sender_id;
             }
@@ -185,12 +194,16 @@ function openChat(discussion, client_id) {
 
 function sideChatHtml(chat_id, client_id) { //----------------------------
     // -> display a single chat on the side
+    const menu_selected = document.querySelector(".items .item-active");
 
     // <div class="discussion message-active">
     let discussion = document.createElement("div");
     discussion.classList.add("discussion");
     discussion.setAttribute("chat-id", chat_id);
-    discussion.onclick = () => { openChat(discussion, client_id) };
+    discussion.onclick = () => {
+        console.log(menu_selected.id)
+        if (menu_selected.id == "home") openChat(discussion, client_id);
+    };
 
     // <div class="photo" style="background-image: url();">
     let photo = document.createElement("div");
@@ -203,7 +216,7 @@ function sideChatHtml(chat_id, client_id) { //----------------------------
         photo.onclick = void_f;
     });
 
-    const menu_selected = document.querySelector(".items .item.item-active");
+
     if (menu_selected.id == "home") {
         photo.addEventListener("mouseover", event => {
             photo.style.backgroundImage = "url(" + img_folder + "exit.png)";
