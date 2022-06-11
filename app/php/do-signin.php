@@ -17,6 +17,6 @@ foreach (file("../database/users.csv", FILE_IGNORE_NEW_LINES) as $line) {
         }
     }
 }
-$_SESSION["badsignin"] = 1;
+$_SESSION["badsignin"] = "Name/Email or Password incorrect";
 header("Location: signin-up.php");
 exit();

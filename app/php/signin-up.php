@@ -22,10 +22,9 @@ if (isset($_SESSION["client"])) {
     <h2>
         <?php
         if (isset($_SESSION["badsignup"])) {
-            if ($_SESSION["badsignup"] == "1") echo "The email already exists";
-            elseif ($_SESSION["badsignup"] == "2") echo "The name already exists";
-        } elseif (isset($_SESSION["badsignup"])) {
-            echo "Name/Email or Password incorrect";
+            echo $_SESSION["badsignup"];
+        } elseif (isset($_SESSION["badsignin"])) {
+            echo $_SESSION["badsignin"];
         } else echo "Welcome to the Chat Application!";
         ?>
     </h2>
@@ -36,7 +35,8 @@ if (isset($_SESSION["client"])) {
 
                 <input type="text" name="name" placeholder="Name" />
                 <input type="text" name="email" placeholder="Email" />
-                <input type="password" name="password" placeholder="Password" />
+                <input type="password" name="password1" placeholder="Type Password" />
+                <input type="password" name="password2" placeholder="Repeat Password" />
                 <button id="submit-signup">Sign Up</button>
             </form>
         </div>

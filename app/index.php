@@ -93,7 +93,7 @@ if (!isset($_SESSION["client"])) header("Location: php/signin-up.php");
           </div>
           <!-- send message -->
           <div class="footer-chat">
-            <i class="icon fa fa-smile-o clickable" style="font-size:25pt;" aria-hidden="true"></i>
+            <!-- <i class="icon fa fa-smile-o clickable" style="font-size:25pt;" aria-hidden="true"></i> -->
             <input type="text" class="write-message" placeholder="Type your message here"></input>
             <i class="icon send fa fa-paper-plane-o clickable" aria-hidden="true"></i>
           </div>

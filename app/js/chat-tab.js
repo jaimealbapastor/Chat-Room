@@ -80,7 +80,6 @@ function set_onclick_buttons(client_id) {
 
     // menu buttons
     function selectMenu(menu_elem) {
-        console.log(menu_elem)
         if (!menu_elem.className.includes("item-active")) {
             document.querySelector(".items .item-active").classList.remove("item-active");
             menu_elem.classList.add("item-active");
@@ -104,7 +103,8 @@ function set_onclick_buttons(client_id) {
 
 function checkNewMsg() {
     const discussion = document.querySelector(".discussions div.message-active");
-    if (discussion != null) {
+    if (discussion != null && discussion.style.display !== "none") {
+
         const client_id = document.getElementById("client-id").getAttribute("value");
         updateNewMsg(discussion, client_id);
     }

@@ -200,8 +200,8 @@ function sideChatHtml(chat_id, client_id) { //----------------------------
     let discussion = document.createElement("div");
     discussion.classList.add("discussion");
     discussion.setAttribute("chat-id", chat_id);
+    discussion.style.display = "flex";
     discussion.onclick = () => {
-        console.log(menu_selected.id)
         if (menu_selected.id == "home") openChat(discussion, client_id);
     };
 
@@ -223,9 +223,17 @@ function sideChatHtml(chat_id, client_id) { //----------------------------
 
         });
         photo.addEventListener("click", event => {
-            if (active_chats.includes(chat_id)) active_chats.splice(active_chats.indexOf(chat_id), 1);
+            if (active_chats.includes(chat_id)) {
+                active_chats.splice(active_chats.indexOf(chat_id), 1);
+                simpleAjax("php/ajax/put/delete-user-in-chat.php", "post", "chat-id=" + chat_id, void_f, on_failure);
+            }
+
+            if (discussion.className = "discussion message-active") {
+                discussion.classList.remove("message-active");
+            }
             discussion.style.display = "none";
             clearChat();
+
         });
 
     } else if (menu_selected.id == "all-chats") {
@@ -233,7 +241,10 @@ function sideChatHtml(chat_id, client_id) { //----------------------------
             photo.style.backgroundImage = "url(" + img_folder + "join.png)";
         });
         photo.addEventListener("click", event => {
-            if (!active_chats.includes(chat_id)) active_chats.push(chat_id);
+            if (!active_chats.includes(chat_id)) {
+                active_chats.push(chat_id);
+                simpleAjax("php/ajax/put/user-in-chat.php", "post", "chat-id=" + chat_id, void_f, on_failure);
+            }
         });
     }
 
