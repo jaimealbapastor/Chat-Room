@@ -1,1 +1,16 @@
-{"Welcome":["Jaime","Hugo","Theo","Tony"],"PEIP2":["Hugo","Jaime","Tony"]}
+{
+    "Welcome": [
+        "Jaime",
+        "Hugo",
+        "Tony"
+    ],
+    "PEIP2": [
+        "Jaime",
+        "Tony",
+        "Hugo"
+    ],
+    "Formating": [
+        "Jaime",
+        "Hugo"
+    ]
+}
