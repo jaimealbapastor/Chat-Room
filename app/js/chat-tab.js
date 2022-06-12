@@ -109,15 +109,16 @@ function checkNewMsg() {
         updateNewMsg(discussion, client_id);
     }
 
-
-    let msg_h = document.querySelectorAll(".messages-chat > .message").length * 62;
-    let time_h = document.querySelectorAll(".messages-chat > .time").length * 25;
-    let height = 90 + msg_h + time_h + 80 + 20;
-
-    if (height > 500) {
-        document.querySelector(".container").style.height = height + "px";
-        document.querySelector(".menu").style.height = height + "px";
-        document.querySelector(".discussions").style.height = height + "px";
+    var hauteur = 350;
+    document.querySelectorAll(".messages-chat > *").forEach(msg => {
+        // console.log(msg.clientHeight);
+        hauteur += msg.clientHeight;
+    });
+    console.log(hauteur)
+    if (hauteur > 500) {
+        document.querySelector(".container").style.height = hauteur + "px";
+        document.querySelector(".menu").style.height = hauteur + "px";
+        document.querySelector(".discussions").style.height = hauteur + "px";
     } else {
         document.querySelector(".container").style.height = "700px";
         document.querySelector(".menu").style.height = "700px"
