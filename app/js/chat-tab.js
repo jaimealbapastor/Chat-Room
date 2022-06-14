@@ -111,7 +111,6 @@ function checkNewMsg() {
 
     var hauteur = 350;
     document.querySelectorAll(".messages-chat > *").forEach(msg => {
-        // console.log(msg.clientHeight);
         hauteur += msg.clientHeight;
     });
     console.log(hauteur)
